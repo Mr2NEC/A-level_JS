@@ -19,49 +19,43 @@ divElem.style = "border:2px solid black;";
 divElem.id = "divBodyChat";
 wrapperElem.appendChild(divElem);
 
+const URL = "http://students.a-level.com.ua:10012";
 let myMessageId = 0;
+const delay = (ms) => new Promise((ok) => setTimeout(() => ok(ms), ms));
 
 function jsonPost(url, data) {
-    return new Promise((resolve, reject) => {
-        var x = new XMLHttpRequest();
-        x.onerror = () => reject(new Error("jsonPost failed"));
-        //x.setRequestHeader('Content-Type', 'application/json');
-        x.open("POST", url, true);
-        x.send(JSON.stringify(data));
+    return fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+    }).then((response) => {
+        if (response.ok) {
+            return response.json();
+        }
 
-        x.onreadystatechange = () => {
-            if (x.readyState == XMLHttpRequest.DONE && x.status == 200) {
-                resolve(JSON.parse(x.responseText));
-            } else if (x.status != 200) {
-                reject(new Error("status is not 200"));
-            }
-        };
+        return response.json().then((error) => {
+            let e = new Error("Error");
+            e.data = error;
+            throw e;
+        });
     });
 }
-btn.addEventListener("click", postMessage);
-function postMessage() {
-    jsonPost("http://students.a-level.com.ua:10012", {
-        func: "addMessage",
-        nick: input1Elem.value,
-        message: input2Elem.value,
-    }).then(() => getMessage());
-}
 
-function getMessage() {
-    jsonPost("http://students.a-level.com.ua:10012", {
+async function getMessages() {
+    jsonPost(URL, {
         func: "getMessages",
         messageId: myMessageId,
-    }).then((data) => {
-        for (let id in data.data) {
-            cteateMessages(data.data[id]);
-        }
-        myMessageId = data.nextMessageId;
-    });
+    })
+        .then((data) => {
+            for (let id in data.data) {
+                createMessages(data.data[id]);
+            }
+            myMessageId = data.nextMessageId;
+        })
+        .catch((e) => console.log(e));
 }
+getMessages();
 
-setInterval(getMessage, 5 * 1000);
-
-function cteateMessages(objElem) {
+function createMessages(objElem) {
     let divMessage = document.createElement("div");
     divMessage.style =
         "border: 1px solid black; padding: 10px; background: #00FFFF; display: flex; align-items: center; flex-direction: column;";
@@ -102,3 +96,27 @@ function timeConverter(timestamp) {
         date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
     return time;
 }
+
+async function checkLoop() {
+    let endlessCycle = false;
+    while (!endlessCycle) {
+        await delay(5000);
+        getMessages();
+    }
+}
+checkLoop();
+
+async function sendMessage(nick, message) {
+    jsonPost(URL, {
+        func: "addMessage",
+        nick: nick,
+        message: message,
+    }).catch((e) => console.log(e.message));
+}
+
+async function sendAndCheck() {
+    await sendMessage(input1Elem.value, input2Elem.value);
+    getMessages();
+}
+
+btn.addEventListener("click", sendAndCheck);
