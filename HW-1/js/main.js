@@ -70,8 +70,8 @@ function createMessages(objElem) {
 }
 
 function timeConverter(timestamp) {
-    var a = new Date(timestamp);
-    var months = [
+    let a = new Date(timestamp);
+    let months = [
         "Jan",
         "Feb",
         "Mar",
@@ -85,13 +85,13 @@ function timeConverter(timestamp) {
         "Nov",
         "Dec",
     ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time =
+    let year = a.getFullYear();
+    let month = months[a.getMonth()];
+    let date = a.getDate();
+    let hour = a.getHours();
+    let min = a.getMinutes();
+    let sec = a.getSeconds();
+    let time =
         date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
     return time;
 }
