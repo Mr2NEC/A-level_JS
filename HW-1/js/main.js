@@ -53,7 +53,6 @@ async function getMessages() {
         })
         .catch((e) => console.log(e));
 }
-getMessages();
 
 function createMessages(objElem) {
     let divMessage = document.createElement("div");
@@ -104,7 +103,6 @@ async function checkLoop() {
         getMessages();
     }
 }
-checkLoop();
 
 async function sendMessage(nick, message) {
     jsonPost(URL, {
@@ -120,3 +118,5 @@ async function sendAndCheck() {
 }
 
 btn.addEventListener("click", sendAndCheck);
+getMessages();
+checkLoop();
