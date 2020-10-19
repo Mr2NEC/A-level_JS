@@ -23,35 +23,33 @@ const URL = "http://students.a-level.com.ua:10012";
 let myMessageId = 0;
 const delay = (ms) => new Promise((ok) => setTimeout(() => ok(ms), ms));
 
-function jsonPost(url, data) {
-    return fetch(url, {
+async function jsonPost(url, data) {
+    let response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(data),
-    }).then((response) => {
-        if (response.ok) {
-            return response.json();
-        }
+    })
 
-        return response.json().then((error) => {
-            let e = new Error("Error");
-            e.data = error;
-            throw e;
-        });
-    });
+    if (response.status == 200) {
+    let json = await response.json();
+    return json;
+  }
+
+  throw new Error(response.status);
 }
 
 async function getMessages() {
-    jsonPost(URL, {
-        func: "getMessages",
-        messageId: myMessageId,
-    })
-        .then((data) => {
-            for (let id in data.data) {
-                createMessages(data.data[id]);
-            }
-            myMessageId = data.nextMessageId;
+     let data = await jsonPost(URL, {
+            func: "getMessages",
+            messageId: myMessageId,
         })
-        .catch((e) => console.log(e));
+        .catch((err) => alert(err));
+    
+    for (let id in data.data) {
+        createMessages(data.data[id]);
+    }
+    
+    myMessageId = data.nextMessageId;
+       
 }
 
 function createMessages(objElem) {
@@ -109,7 +107,7 @@ async function sendMessage(nick, message) {
         func: "addMessage",
         nick: nick,
         message: message,
-    }).catch((e) => console.log(e.message));
+    }).catch((err) => alert(err));
 }
 
 async function sendAndCheck() {
