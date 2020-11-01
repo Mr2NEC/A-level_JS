@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>HW-4</title>
+        <link href="css/index.css" rel="stylesheet" type="text/css" />
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.3/papaparse.min.js"></script>
+        <script src="http://gitlab.a-level.com.ua/gitgod/nanobind/raw/master/static/nb.js"></script>
+    </head>
+    <body>
+        <canvas id="canvas" width="400" height="400"></canvas>
+        <button id="undo">UNDO</button>
+        <input type="color" id="color" />
+        <select id="tool">
+            <option value="graffity">Graffity</option>
+            <option value="circle">Circle</option>
+            <option value="ellipse">Ellipse</option>
+            <option value="line">Line</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="select">Select</option>
+        </select>
+        <input type="number" id="size" value="10" />
+        <button id="delete">Delete...</button>
+        <script src="js/index.js"></script>
+    </body>
+</html>
