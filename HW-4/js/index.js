@@ -1,5 +1,5 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
 const width = canvas.width;
 const height = canvas.height;
@@ -83,7 +83,6 @@ const tools = {
             current = new Ellipse(
                 e.clientX,
                 e.clientY,
-                1,
                 0,
                 0,
                 color.value,
@@ -136,7 +135,7 @@ const tools = {
 
 function superHandler(evt) {
     let t = tools[tool.value];
-    if (typeof t[evt.type] === "function") t[evt.type].call(this, evt);
+    if (typeof t[evt.type] === 'function') t[evt.type].call(this, evt);
 }
 
 canvas.onmousemove = superHandler;
@@ -154,7 +153,7 @@ const distance = (x1, y1, x2, y2) => ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5;
 
 Drawable.prototype.draw = function () {};
 Drawable.prototype.distanceTo = function (x, y) {
-    if (typeof this.x !== "number" || typeof this.y !== "number") {
+    if (typeof this.x !== 'number' || typeof this.y !== 'number') {
         return NaN;
     }
     return distance(this.x, this.y, x, y);
@@ -243,14 +242,13 @@ class Rectangle extends Line {
         ctx.lineTo(this.x + this.width, this.y + this.height);
         ctx.closePath();
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = this.x + this.width;
+        ctx.lineWidth = this.lineWidth;
         ctx.stroke();
     }
 }
 class Ellipse extends Rectangle {
-    constructor(x, y, radius, width, height, color, lineWidth) {
+    constructor(x, y, width, height, color, lineWidth) {
         super(x, y, width, height, color, lineWidth);
-        this.radius = radius;
     }
 
     draw() {
@@ -275,7 +273,7 @@ color.onchange = () => {
     Drawable.drawAll(selection);
 };
 
-document.getElementById("delete").onclick = () => {
+document.getElementById('delete').onclick = () => {
     Drawable.instances = Drawable.instances.filter(
         (item) => !selection.includes(item)
     );
