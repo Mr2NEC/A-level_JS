@@ -1,5 +1,5 @@
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 const width = canvas.width;
 const height = canvas.height;
@@ -56,14 +56,7 @@ const tools = {
     },
     rectangle: {
         mousedown(e) {
-            current = new Rectangle(
-                e.clientX,
-                e.clientY,
-                0,
-                0,
-                color.value,
-                +size.value
-            );
+            current = new Rectangle(e.clientX, e.clientY, 0, 0, color.value);
         },
         mousemove(e) {
             if (!current) return;
@@ -80,14 +73,7 @@ const tools = {
     },
     ellipse: {
         mousedown(e) {
-            current = new Ellipse(
-                e.clientX,
-                e.clientY,
-                0,
-                0,
-                color.value,
-                +size.value
-            );
+            current = new Ellipse(e.clientX, e.clientY, 0, 0, color.value);
         },
         mousemove(e) {
             if (!current) return;
@@ -135,7 +121,7 @@ const tools = {
 
 function superHandler(evt) {
     let t = tools[tool.value];
-    if (typeof t[evt.type] === 'function') t[evt.type].call(this, evt);
+    if (typeof t[evt.type] === "function") t[evt.type].call(this, evt);
 }
 
 canvas.onmousemove = superHandler;
@@ -153,7 +139,7 @@ const distance = (x1, y1, x2, y2) => ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5;
 
 Drawable.prototype.draw = function () {};
 Drawable.prototype.distanceTo = function (x, y) {
-    if (typeof this.x !== 'number' || typeof this.y !== 'number') {
+    if (typeof this.x !== "number" || typeof this.y !== "number") {
         return NaN;
     }
     return distance(this.x, this.y, x, y);
@@ -232,39 +218,39 @@ class Line extends Drawable {
     }
 }
 class Rectangle extends Line {
-    constructor(x, y, width, height, color, lineWidth) {
-        super(x, y, width, height, color, lineWidth);
+    constructor(x, y, width, height, color) {
+        super(x, y, width, height, color);
     }
 
     draw() {
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + this.width, this.y + this.height);
+        ctx.rect(this.x, this.y, this.width, this.height);
         ctx.closePath();
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = this.lineWidth;
-        ctx.stroke();
+        ctx.fill();
     }
 }
 class Ellipse extends Rectangle {
-    constructor(x, y, width, height, color, lineWidth) {
-        super(x, y, width, height, color, lineWidth);
+    constructor(x, y, width, height, color) {
+        super(x, y, width, height, color);
     }
 
     draw() {
         ctx.beginPath();
-        ctx.arc(
-            this.x + this.width,
-            this.y + this.height,
-            20,
-            30,
-            Math.PI * 2,
-            true
-        );
-        ctx.closePath();
+        let lx = this.x - this.width / 2,
+            rx = this.x + this.width / 2,
+            ty = this.y - this.height / 2,
+            by = this.y + this.height / 2;
+        let magic = 0.551784;
+        let xmagic = (magic * this.width) / 2;
+        let ymagic = (this.height * magic) / 2;
+        ctx.moveTo(this.x, ty);
+        ctx.bezierCurveTo(this.x + xmagic, ty, rx, this.y - ymagic, rx, this.y);
+        ctx.bezierCurveTo(rx, this.y + ymagic, this.x + xmagic, by, this.x, by);
+        ctx.bezierCurveTo(this.x - xmagic, by, lx, this.y + ymagic, lx, this.y);
+        ctx.bezierCurveTo(lx, this.y - ymagic, this.x - xmagic, ty, this.x, ty);
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = this.x + this.width;
-        ctx.stroke();
+        ctx.fill();
     }
 }
 
@@ -273,7 +259,7 @@ color.onchange = () => {
     Drawable.drawAll(selection);
 };
 
-document.getElementById('delete').onclick = () => {
+document.getElementById("delete").onclick = () => {
     Drawable.instances = Drawable.instances.filter(
         (item) => !selection.includes(item)
     );
