@@ -71,9 +71,27 @@ const tools = {
             current = null;
         },
     },
-    ellipse: {
+    ellipse1: {
         mousedown(e) {
-            current = new Ellipse(e.clientX, e.clientY, 0, 0, color.value);
+            current = new EllipseV1(e.clientX, e.clientY, 0, 0, color.value);
+        },
+        mousemove(e) {
+            if (!current) return;
+
+            current.width = e.clientX - current.x;
+            current.height = e.clientY - current.y;
+            current.radius = current.distanceTo(e.clientX, e.clientY);
+
+            Drawable.drawAll();
+        },
+
+        mouseup(e) {
+            current = null;
+        },
+    },
+    ellipse2: {
+        mousedown(e) {
+            current = new EllipseV2(e.clientX, e.clientY, 0, 0, color.value);
         },
         mousemove(e) {
             if (!current) return;
@@ -216,26 +234,40 @@ class Line extends Drawable {
         ctx.lineWidth = this.lineWidth;
         ctx.stroke();
     }
+    in(x, y) {
+        return (
+            this.distanceTo(x, y) < this.width ||
+            this.distanceTo(x, y) < this.height
+        );
+    }
+
+    inBounds(x, y, w, h) {
+        return this.x >= x && this.x <= x + w && this.y >= y && this.y <= y + h;
+    }
 }
 class Rectangle extends Line {
     constructor(x, y, width, height, color) {
         super(x, y, width, height, color);
     }
 
-    draw() {
+    draw(selected) {
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
         ctx.closePath();
         ctx.strokeStyle = this.color;
+        if (selected) {
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
         ctx.fill();
     }
 }
-class Ellipse extends Rectangle {
+class EllipseV1 extends Rectangle {
     constructor(x, y, width, height, color) {
         super(x, y, width, height, color);
     }
 
-    draw() {
+    draw(selected) {
         ctx.beginPath();
         let lx = this.x - this.width / 2,
             rx = this.x + this.width / 2,
@@ -250,6 +282,35 @@ class Ellipse extends Rectangle {
         ctx.bezierCurveTo(this.x - xmagic, by, lx, this.y + ymagic, lx, this.y);
         ctx.bezierCurveTo(lx, this.y - ymagic, this.x - xmagic, ty, this.x, ty);
         ctx.strokeStyle = this.color;
+        if (selected) {
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        ctx.fill();
+    }
+}
+class EllipseV2 extends Rectangle {
+    constructor(x, y, width, height, color) {
+        super(x, y, width, height, color);
+    }
+
+    draw(selected) {
+        ctx.beginPath();
+        ctx.ellipse(
+            Math.abs(this.x),
+            Math.abs(this.y),
+            Math.abs(this.width),
+            Math.abs(this.height),
+            Math.PI * 2,
+            0,
+            Math.PI * 2
+        );
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        if (selected) {
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
         ctx.fill();
     }
 }
@@ -266,15 +327,3 @@ document.getElementById("delete").onclick = () => {
     selection = [];
     Drawable.drawAll();
 };
-
-//new Line(0,0,100,100, "red")
-////new Circle(30,30,10, "red")
-
-////canvas.onmousemove = function(e){
-////}
-
-//undo.onclick = function(){
-//Drawable.instances.pop()
-////Drawable.instances = []
-//Drawable.drawAll()
-//}
