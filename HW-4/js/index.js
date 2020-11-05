@@ -1,5 +1,5 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
 const width = canvas.width;
 const height = canvas.height;
@@ -139,7 +139,7 @@ const tools = {
 
 function superHandler(evt) {
     let t = tools[tool.value];
-    if (typeof t[evt.type] === "function") t[evt.type].call(this, evt);
+    if (typeof t[evt.type] === 'function') t[evt.type].call(this, evt);
 }
 
 canvas.onmousemove = superHandler;
@@ -157,7 +157,7 @@ const distance = (x1, y1, x2, y2) => ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5;
 
 Drawable.prototype.draw = function () {};
 Drawable.prototype.distanceTo = function (x, y) {
-    if (typeof this.x !== "number" || typeof this.y !== "number") {
+    if (typeof this.x !== 'number' || typeof this.y !== 'number') {
         return NaN;
     }
     return distance(this.x, this.y, x, y);
@@ -225,15 +225,20 @@ class Line extends Drawable {
         this.draw();
     }
 
-    draw() {
+    draw(selected) {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + this.width, this.y + this.height);
         ctx.closePath();
+        if (selected) {
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
         ctx.strokeStyle = this.color;
         ctx.lineWidth = this.lineWidth;
         ctx.stroke();
     }
+
     in(x, y) {
         return (
             this.distanceTo(x, y) < this.width ||
@@ -320,7 +325,7 @@ color.onchange = () => {
     Drawable.drawAll(selection);
 };
 
-document.getElementById("delete").onclick = () => {
+document.getElementById('delete').onclick = () => {
     Drawable.instances = Drawable.instances.filter(
         (item) => !selection.includes(item)
     );
