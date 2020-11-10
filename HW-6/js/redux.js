@@ -120,6 +120,7 @@ function changeLoginOrRegister(id) {
     let id2 = id === 'authorization' ? 'registration' : 'authorization';
     let elem = document.querySelector(`#${id}`);
     let elem2 = document.querySelector(`#${id2}`);
+    let btn = document.querySelector('#authorizationBtn');
     if (elem.style.backgroundColor !== 'green') {
         elem.style.backgroundColor = 'green';
         elem.style.color = 'honeydew';
@@ -128,4 +129,5 @@ function changeLoginOrRegister(id) {
         elem2.style.color = 'black';
         elem2.style.border = '1px solid black';
     }
+    id === 'authorization' ? (btn.value = 'Sign in') : (btn.value = 'Register');
 }
