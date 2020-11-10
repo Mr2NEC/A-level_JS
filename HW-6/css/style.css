@@ -1,0 +1,52 @@
+#wrapper {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+#authorizationBody {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 10px;
+    margin: 100px 0;
+    border-radius: 10px;
+    border: 1px solid greenyellow;
+    box-shadow: 0 0 10px greenyellow;
+}
+.input {
+    width: 30%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+.authorizationRegistrationBody {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+#authorizationBtn {
+    background-color: green;
+    font-weight: bold;
+    color: honeydew;
+    border: 1px solid honeydew;
+}
+#authorization,
+#registration {
+    border-radius: 10px;
+    margin: 0 10px;
+    padding: 10px 50px;
+    border: 1px solid black;
+    font-weight: bold;
+}
+
+#authorization {
+    background-color: green;
+    color: honeydew;
+    border: 1px solid honeydew;
+}
