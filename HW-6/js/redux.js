@@ -76,37 +76,39 @@ const gql = (
         body: JSON.stringify({ query, variables }),
     }).then((res) => res.json());
 
-store.dispatch(
-    actionPromise(
-        'CategoryFind',
-        gql(
-            undefined,
-            `
-query cats($q: String){
-    CategoryFind(query:$q){
-        _id name goods{
-            _id name
-        }
-    }
-}
-`,
-            { q: JSON.stringify([{}]) }
-        ).then((data) => data.data)
-    )
-);
-
-// const actionDefferredPromise = (ms, getPromise) => async (dispatch) => {
-//     await dispatch(actionPromise('delay', delay(ms))); //REGISTER
-//     await dispatch(actionPromise('defferred', getPromise())); //LOGIN
-// };
-
 const actionLogin = (login, password) =>
-    actionPromise('login', loginQuery(login, password));
+    store.dispatch(actionPromise('login', loginQuery(login, password)));
 
 const actionRegister = (login, password) => async (dispatch) => {
-    await dispatch('register', actionPromise(registerQuery(login, password))); //REGISTER
+    await dispatch(actionPromise('register', registerQuery(login, password))); //REGISTER
     await dispatch(actionLogin(login, password)); //LOGIN
 };
+
+const loginQuery = (login, password) =>
+    gql(
+        undefined,
+        `query log($login:String, $password:String){
+  login(login:$login, password:$password)
+}`,
+        {
+            login: `${login}`,
+            password: `${password}`,
+        }
+    );
+
+const registerQuery = (login, password) =>
+    gql(
+        undefined,
+        `mutation reg($login:String, $password:String){
+  UserUpsert (user:{login:$login, password:$password}){
+    _id,login  
+  }
+}`,
+        {
+            login: `${login}`,
+            password: `${password}`,
+        }
+    );
 
 let ARBody = document.querySelector('.authorizationRegistrationBody');
 
@@ -116,11 +118,12 @@ for (let node of ARBody.childNodes) {
     });
 }
 
+let btn = document.querySelector('#authorizationBtn');
+
 function changeLoginOrRegister(id) {
     let id2 = id === 'authorization' ? 'registration' : 'authorization';
     let elem = document.querySelector(`#${id}`);
     let elem2 = document.querySelector(`#${id2}`);
-    let btn = document.querySelector('#authorizationBtn');
     if (elem.style.backgroundColor !== 'green') {
         elem.style.backgroundColor = 'green';
         elem.style.color = 'honeydew';
@@ -131,3 +134,17 @@ function changeLoginOrRegister(id) {
     }
     id === 'authorization' ? (btn.value = 'Sign in') : (btn.value = 'Register');
 }
+
+btn.addEventListener('click', function (event) {
+    let login = document.querySelector(`#login`);
+    let password = document.querySelector(`#password`);
+    console.log(event.target.value);
+
+    if (event.target.value === 'Sign in') {
+        actionLogin(login.value, password.value);
+    }
+
+    if (event.target.value === 'Register') {
+        store.dispatch(actionRegister(login.value, password.value));
+    }
+});
