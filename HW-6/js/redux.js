@@ -62,6 +62,12 @@ const actionPromise = (name, p) => {
     };
 };
 
+//Authorization / Registration
+
+let ARBody = document.querySelector('.authorizationRegistrationBody');
+let btn = document.querySelector('#authorizationBtn');
+const delay = (ms) => new Promise((ok) => setTimeout(() => ok(ms), ms));
+
 const gql = (
     url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
     query = '',
@@ -77,7 +83,7 @@ const gql = (
     }).then((res) => res.json());
 
 const actionLogin = (login, password) =>
-    store.dispatch(actionPromise('login', loginQuery(login, password)));
+    store.dispatch(actionPromise('login', loginQuery(login, password))); //LOGIN
 
 const actionRegister = (login, password) => async (dispatch) => {
     await dispatch(actionPromise('register', registerQuery(login, password))); //REGISTER
@@ -94,7 +100,10 @@ const loginQuery = (login, password) =>
             login: `${login}`,
             password: `${password}`,
         }
-    );
+    ).then((data) => {
+        messageFu(data);
+        return data;
+    });
 
 const registerQuery = (login, password) =>
     gql(
@@ -108,17 +117,16 @@ const registerQuery = (login, password) =>
             login: `${login}`,
             password: `${password}`,
         }
-    );
-
-let ARBody = document.querySelector('.authorizationRegistrationBody');
+    ).then((data) => {
+        messageFu(data);
+        return data;
+    });
 
 for (let node of ARBody.childNodes) {
     node.addEventListener('click', function (event) {
         changeLoginOrRegister(event.target.id);
     });
 }
-
-let btn = document.querySelector('#authorizationBtn');
 
 function changeLoginOrRegister(id) {
     let id2 = id === 'authorization' ? 'registration' : 'authorization';
@@ -138,7 +146,6 @@ function changeLoginOrRegister(id) {
 btn.addEventListener('click', function (event) {
     let login = document.querySelector(`#login`);
     let password = document.querySelector(`#password`);
-    console.log(event.target.value);
 
     if (event.target.value === 'Sign in') {
         actionLogin(login.value, password.value);
@@ -148,3 +155,36 @@ btn.addEventListener('click', function (event) {
         store.dispatch(actionRegister(login.value, password.value));
     }
 });
+
+async function createResponseDiv(color, text, ms) {
+    let wrapper = document.querySelector('#wrapper');
+    let responseDiv = document.createElement('div');
+    responseDiv.style.color = color;
+    responseDiv.style.width = '100%';
+    responseDiv.style.padding = '10px';
+    responseDiv.innerHTML = text;
+    wrapper.appendChild(responseDiv);
+    await delay(ms);
+    responseDiv.remove();
+}
+
+function messageFu(data) {
+    if (typeof data.data.login === 'string') {
+        createResponseDiv('green', 'Successfully authorized', 5000);
+    } else if (typeof data.data.UserUpsert === 'object') {
+        createResponseDiv(
+            'green',
+            `${data.data.UserUpsert.login} successfully registered`,
+            5000
+        );
+    }
+    if (data.data.login === null) {
+        createResponseDiv('red', 'Error', 3000);
+    }
+
+    if (data.data.UserUpsert === null) {
+        data.errors.forEach((element) => {
+            createResponseDiv('red', element.message, 5000);
+        });
+    }
+}
