@@ -179,7 +179,7 @@ function messageFu(data) {
         );
     }
     if (data.data.login === null) {
-        createResponseDiv('red', 'Incorrect username or password', 3000);
+        createResponseDiv('red', 'Incorrect login or password', 3000);
     }
 
     if (data.data.UserUpsert === null) {
