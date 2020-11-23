@@ -1,10 +1,6 @@
-import React from 'react'
+import React from 'react';
+import '../App.css';
 
-export default function DivComponent ({children}){
-    return (
-    <div>
-          {children}
-          
-    </div>)
-
-    }
+export default function DivComponent({ children }) {
+    return <div className="DivStyle">{children}</div>;
+}
