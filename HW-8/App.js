@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import './App.css';
-import DivComponent from './components/DivComponent';
-import InputComponent from './components/InputComponent';
-import ButtonComponent from './components/ButtonComponent';
 
 const gql = (
     url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
@@ -28,49 +25,24 @@ const loginQuery = (login, password) =>
             login: `${login}`,
             password: `${password}`,
         }
+    ).then((data) => console.log(data));
+
+const LoginForm = ({ onLogin, btnText = 'Login...' }) => {
+    const [login, setLogin] = useState();
+    const [password, setPassword] = useState();
+    return (
+        <div className="LoginForm">
+            <input onChange={(event) => setLogin(event.target.value)} />
+            <input onChange={(event) => setPassword(event.target.value)} />
+            <button onClick={() => onLogin(login, password)}>{btnText}</button>
+        </div>
     );
+};
 
 function App() {
-    const [login, setLogin] = useState('login');
-    const [password, setPassword] = useState('password');
-    let inputsArr = [
-        {
-            id: 1,
-            type: 'text',
-            value: login,
-            onChange: (e) => setLogin(e.target.value),
-        },
-        {
-            id: 2,
-            type: 'password',
-            value: password,
-            onChange: (e) => setPassword(e.target.value),
-        },
-    ];
     return (
         <>
-            <DivComponent>
-                {inputsArr.map((inputObj) => {
-                    return (
-                        <InputComponent inputObj={inputObj} key={inputObj.id} />
-                    );
-                })}
-                <ButtonComponent
-                    title="Click"
-                    onClick={() =>
-                        loginQuery(login, password)
-                            .then((res) => {
-                                res.data.login !== null
-                                    ? localStorage.setItem(
-                                          'token',
-                                          res.data.login
-                                      )
-                                    : console.log('token === null');
-                            })
-                            .then(console.log(window.localStorage))
-                    }
-                />
-            </DivComponent>
+            <LoginForm onLogin={(l, p) => loginQuery(l, p)} />
         </>
     );
 }
