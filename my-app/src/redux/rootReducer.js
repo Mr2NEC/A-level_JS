@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { LOGIN,LOGOUT,PROMISE } from './type';
+import { LOGIN, LOGOUT, PROMISE, PENDING } from './type';
 import jwt_decode from "jwt-decode";
 
 function promiseReducer(state={}, action){
@@ -8,7 +8,7 @@ function promiseReducer(state={}, action){
         const { name="default", status, payload, error} = action
         if (status){
             return {
-                ...state, [name]: {status, payload: (status === 'PENDING' && state[name] && state[name].payload) || payload, error}
+                ...state, [name]: {status, payload: (status === PENDING && state[name] && state[name].payload) || payload, error}
             }
         }
     }
