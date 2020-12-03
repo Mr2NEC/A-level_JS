@@ -1,19 +1,36 @@
 import { combineReducers } from 'redux';
-import { LOGIN,LOGOUT } from './type';
+import { LOGIN,LOGOUT,PROMISE } from './type';
 import jwt_decode from "jwt-decode";
 
-function promiseReducer(state , action) {
+function promiseReducer(state={}, action){
+    if ([LOGOUT, LOGIN].includes(action.type)) return {}
+    if (action.type === PROMISE){
+        const { name="default", status, payload, error} = action
+        if (status){
+            return {
+                ...state, [name]: {status, payload: (status === 'PENDING' && state[name] && state[name].payload) || payload, error}
+            }
+        }
+    }
+    return state;
+}
+
+function authReducer(state , action) {
     if (state === undefined){
+        if(localStorage.getItem('token') !== null){
+           return authReducer({},{ type: LOGIN, payload: {login:localStorage.getItem('token')}});
+        }
+
         return {}
     }
     if (action.type === LOGIN) {
-        if (action.data.login !== null) {
-            localStorage.setItem('token', action.data.login);
+        if (action.payload.login !== null) {
+            localStorage.setItem('token', action.payload.login);
             return {
                 ...state,
 
-                token: action.data.login,
-                payload:jwt_decode(action.data.login)
+                token: action.payload.login,
+                payload:jwt_decode(action.payload.login)
             };
         }
     }
@@ -27,4 +44,5 @@ function promiseReducer(state , action) {
 
 export const rootReducer = combineReducers({
     promiseReducer: promiseReducer,
+    authReducer:authReducer
 });

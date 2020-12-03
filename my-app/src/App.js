@@ -22,7 +22,7 @@ const LoginForm = ({ onLogin, btnText = 'Login...' }) => {
 };
 
 const CLogin = connect(null, { onLogin: actionLogin })(LoginForm);
-const CLogoutButton = connect((state)=>({children:state.promiseReducer.payload && state.promiseReducer.payload.sub.login}),{onClick:actionLogout})('button')
+const CLogoutButton = connect((state)=>({children:state.authReducer.payload && state.authReducer.payload.sub.login}),{onClick:actionLogout})('button')
 
 function App() {
     return (
