@@ -7,9 +7,9 @@ import {
     REJECTED,
     PENDING,
 } from './type';
-import { GraphQLClient } from 'graphql-request';
+// import { GraphQLClient } from 'graphql-request';
 
-const gql = new GraphQLClient('/graphql');
+// const gql = new GraphQLClient('/graphql');
 
 export const actionSearch = (text) => ({ type: 'SEARCH', text });
 export const actionSearchResult = (payload) => ({
@@ -45,30 +45,30 @@ const actionPromise = function (name, p) {
     };
 };
 
-// const gql = (
-//     url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
-//     query,
-//     variables
-// ) =>
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ query, variables }),
-//     }).then((res) => res.json());
+const gql = (
+    url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
+    query,
+    variables
+) =>
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query, variables }),
+    }).then((res) => res.json());
 
-export const actionPosts = () => {
+export const actionCategoryFind = () => {
     return actionPromise(
-        'posts',
-        gql.request(
-            `query psts{
-          getPosts{
-            id, title, text    
-          }
-        }`,
-            null
+        'categories',
+        gql(
+            undefined,
+            `query {
+  CategoryFind(query:"[{\\"parent\\":null}]"){
+    _id,name
+  }
+}  `
         )
     );
 };
@@ -78,7 +78,7 @@ export function actionLogin(login, password) {
         let result = await dispatch(
             actionPromise(
                 'log',
-                gql.request(
+                gql(
                     undefined,
                     `query log($login:String, $password:String){
   login(login :$login, password:$password)
@@ -105,7 +105,7 @@ export function actionRegister(login, password) {
         let result = await dispatch(
             actionPromise(
                 'reg',
-                gql.request(
+                gql(
                     undefined,
                     `mutation reg($login:String, $password:String){
   UserUpsert (user:{login:$login, password:$password}){

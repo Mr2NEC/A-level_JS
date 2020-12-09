@@ -7,39 +7,15 @@ import {
     actionLogin,
     actionRegister,
     actionLogout,
-    actionPosts,
+    actionCategoryFind,
 } from './redux/actions';
 import { rootReducer } from './redux/rootReducer';
 import { Router, Route } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
+// import createHistory from 'history/createBrowserHistory';
 import './App.css';
 
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
-const history = createHistory();
-
-const Post = ({ post }) => (
-    <div>
-        <h2>{post.title}</h2>
-        <p>{post.text}</p>
-    </div>
-);
-
-const PostFeed = ({ posts = [] }) => (
-    <div>{posts && posts.map((p) => <Post post={p} />)}</div>
-);
-
-const CPostFeed = connect((s) => ({
-    posts:
-        s.promise.posts &&
-        s.promise.posts.payload &&
-        s.promise.posts.payload.getPosts,
-}))(PostFeed);
-
-const PageMain = () => (
-    <>
-        <CPostFeed />
-    </>
-);
+// const history = createHistory();
 
 const LoginForm = ({ onLogin, btnText = 'Submit' }) => {
     const [login, setLogin] = useState();
@@ -57,12 +33,38 @@ const LoginForm = ({ onLogin, btnText = 'Submit' }) => {
         </div>
     );
 };
-const logoutButton = () => {
-    return <button className="LoginFormButton" />;
+const logoutButton = ({ onClick, children }) => {
+    return (
+        <button className="LoginFormButton" onClick={() => onClick()}>
+            {children}
+        </button>
+    );
 };
 
 const CLogin = connect(null, { onLogin: actionLogin })(LoginForm);
 const CRegister = connect(null, { onLogin: actionRegister })(LoginForm);
+
+const LoginOrRegister = () => {
+    const [logReg, setLogReg] = useState(<CLogin />);
+    return (
+        <div>
+            <CLogoutButton />
+            <button
+                className="LoginFormButton"
+                onClick={() => setLogReg(<CLogin />)}
+            >
+                Login
+            </button>
+            <button
+                className="LoginFormButton"
+                onClick={() => setLogReg(<CRegister />)}
+            >
+                Register
+            </button>
+            {logReg}
+        </div>
+    );
+};
 const CLogoutButton = connect(
     (state) => ({
         children:
@@ -71,22 +73,61 @@ const CLogoutButton = connect(
     { onClick: actionLogout }
 )(logoutButton);
 
-store.dispatch(actionPosts());
+store.dispatch(actionCategoryFind());
+
+const CategoryMenuItem = ({
+    category: { _id, name } = { _id: 'NOID', name: 'NO Category' },
+}) => (
+    <li>
+        <a href={`/category/${_id}`}>{name}</a>
+    </li>
+);
+
+const CategoryMenu = ({
+    categories = [
+        {
+            _id: '5dc45acf5df9d670df48cc48',
+            name: "TV's",
+        },
+        {
+            _id: '5dc49f4d5df9d670df48cc64',
+            name: 'Airconditions',
+        },
+        {
+            _id: '5dc458985df9d670df48cc47',
+            name: 'Smartphones',
+        },
+    ],
+}) => (
+    <aside>
+        <ul>
+            {categories &&
+                categories.map((category) => (
+                    <CategoryMenuItem category={category} />
+                ))}
+        </ul>
+    </aside>
+);
+
+const CCategoryMenu = connect((state) => ({
+    categories:
+        state.promiseReducer.categories &&
+        state.promiseReducer.categories.payload &&
+        state.promiseReducer.categories.payload.data &&
+        state.promiseReducer.categories.payload.data.CategoryFind,
+}))(CategoryMenu);
 
 function App() {
     return (
         <Provider store={store}>
             <>
                 <div className="authorizationForm">
-                    <CLogoutButton />
-                    <span>Login</span>
-                    <CLogin />
-                    <span>Register</span>
-                    <CRegister />
+                    <LoginOrRegister />
                 </div>
-                <Router history={history}>
+                <CCategoryMenu />
+                {/* <Router history={history}>
                     <Route path="/" component={PageMain} />
-                </Router>
+                </Router> */}
             </>
         </Provider>
     );
