@@ -1,0 +1,27 @@
+import React from 'react';
+import CategoryMenuItem from './CategoryMenuItem'
+
+export default function CategoryMenu  ({
+    categories = [
+        {
+            _id: '5dc45acf5df9d670df48cc48',
+            name: "TV's",
+        },
+        {
+            _id: '5dc49f4d5df9d670df48cc64',
+            name: 'Airconditions',
+        },
+        {
+            _id: '5dc458985df9d670df48cc47',
+            name: 'Smartphones',
+        },
+    ],
+})  
+    { return<aside>
+        <ul>
+            {categories &&
+                categories.map((category) => (
+                    <CategoryMenuItem category={category} />
+                ))}
+        </ul>
+    </aside>}

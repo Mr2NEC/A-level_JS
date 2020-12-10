@@ -72,6 +72,23 @@ export const actionCategoryFind = () => {
         )
     );
 };
+export const actionCategoryFindOne = (_id) => {
+    return actionPromise(
+        'CategoryFindOne',
+        gql(
+            undefined,
+            `query CategoryOne($query:String){
+  CategoryFindOne(query:$query){
+    _id,name,goods{
+        _id,name
+    }
+  }
+}  `,{
+    query: JSON.stringify([{_id}]),
+}
+        )
+    );
+};
 
 export function actionLogin(login, password) {
     return async function (dispatch) {
