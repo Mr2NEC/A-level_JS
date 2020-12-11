@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import CGoodsList from '../components/GoodsList';
+import СGoodCard from '../components/GoodCard';
 
-export default function PageCategory({
+export default function PageGood({
     match: {
         params: { _id },
     },
@@ -10,8 +10,8 @@ export default function PageCategory({
     useEffect(() => (getData(_id), undefined), [_id]);
     return (
         <>
-            <h1>Категория {_id}</h1>
-            <CGoodsList />
+            <h1>Товар {_id}</h1>
+            <СGoodCard />
         </>
     );
 }

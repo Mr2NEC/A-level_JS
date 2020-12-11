@@ -1,7 +1,7 @@
 import React from 'react';
-import CategoryMenuItem from './CategoryMenuItem'
+import CategoryMenuItem from './CategoryMenuItem';
 
-export default function CategoryMenu  ({
+export default function CategoryMenu({
     categories = [
         {
             _id: '5dc45acf5df9d670df48cc48',
@@ -16,12 +16,18 @@ export default function CategoryMenu  ({
             name: 'Smartphones',
         },
     ],
-})  
-    { return<aside>
-        <ul>
-            {categories &&
-                categories.map((category) => (
-                    <CategoryMenuItem category={category} />
-                ))}
-        </ul>
-    </aside>}
+}) {
+    return (
+        <aside>
+            <ul>
+                {categories &&
+                    categories.map((category) => (
+                        <CategoryMenuItem
+                            key={category._id}
+                            category={category}
+                        />
+                    ))}
+            </ul>
+        </aside>
+    );
+}

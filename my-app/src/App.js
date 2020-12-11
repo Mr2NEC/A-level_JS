@@ -6,20 +6,22 @@ import logger from 'redux-logger';
 import { rootReducer } from './redux/rootReducer';
 import { Router, Route } from 'react-router-dom';
 
-
 import {
     actionLogin,
     actionRegister,
     actionLogout,
     actionCategoryFind,
-    actionCategoryFindOne
+    actionCategoryFindOne,
+    actionGoodFindOne,
 } from './redux/actions';
 
-import CategoryMenu from './components/CategoryMenu'
-import LoginForm from './components/LoginForm'
-import logoutButton from './components/logoutButton'
-import PageMain from './page/PageMain'
-import PageCategory from './page/PageCategory'
+import CategoryMenu from './components/CategoryMenu';
+import LoginForm from './components/LoginForm';
+import logoutButton from './components/logoutButton';
+
+import PageMain from './page/PageMain';
+import PageCategory from './page/PageCategory';
+import PageGood from './page/PageGood';
 
 import createHistory from 'history/createBrowserHistory';
 import './App.css';
@@ -69,7 +71,11 @@ const CCategoryMenu = connect((state) => ({
         state.promiseReducer.categories.payload.data.CategoryFind,
 }))(CategoryMenu);
 
-const CPageCategory =connect(null, {getData:actionCategoryFindOne})(PageCategory)
+const CPageCategory = connect(null, { getData: actionCategoryFindOne })(
+    PageCategory
+);
+
+const СPageGood = connect(null, { getData: actionGoodFindOne })(PageGood);
 
 function App() {
     return (
@@ -78,13 +84,18 @@ function App() {
                 <div className="authorizationForm">
                     <LoginOrRegister />
                 </div>
-                
+
                 <Router history={history}>
                     <CCategoryMenu />
                     <main>
-                        <Route path='/' component={PageMain} exact />
-                        <Route path='/category/:_id' component={CPageCategory} exact />
-                    </main> 
+                        <Route path="/" component={PageMain} exact />
+                        <Route
+                            path="/category/:_id"
+                            component={CPageCategory}
+                            exact
+                        />
+                        <Route path="/good/:_id" component={СPageGood} exact />
+                    </main>
                 </Router>
             </>
         </Provider>

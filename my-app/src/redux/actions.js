@@ -83,9 +83,27 @@ export const actionCategoryFindOne = (_id) => {
         _id,name
     }
   }
-}  `,{
-    query: JSON.stringify([{_id}]),
-}
+}  `,
+            {
+                query: JSON.stringify([{ _id }]),
+            }
+        )
+    );
+};
+
+export const actionGoodFindOne = (_id) => {
+    return actionPromise(
+        'GoodFindOne',
+        gql(
+            undefined,
+            `query good($good:String){
+  GoodFindOne(query:$good){
+    _id, name, createdAt, description, price
+  }
+} `,
+            {
+                good: JSON.stringify([{ _id }]),
+            }
         )
     );
 };
@@ -136,7 +154,7 @@ export function actionRegister(login, password) {
                 )
             )
         );
-        let ok = await dispatch(actionAuthRegister(result));
+        await dispatch(actionAuthRegister(result));
 
         return dispatch(actionLogin(login, password));
     };
