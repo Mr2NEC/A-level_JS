@@ -23,8 +23,7 @@ function GoodCard({ good = defaultGood }) {
 const CGoodCard = connect((state) => ({
     good:
         state.promiseReducer.GoodFindOne &&
-        state.promiseReducer.GoodFindOne.payload &&
-        state.promiseReducer.GoodFindOne.payload.data.GoodFindOne,
+        state.promiseReducer.GoodFindOne.payload,
 }))(GoodCard);
 
 export default CGoodCard;

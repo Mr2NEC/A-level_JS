@@ -1,11 +1,11 @@
-import { combineReducers } from "redux";
-import { LOGIN, REGISTER, LOGOUT, PROMISE, PENDING } from "./type";
-import jwt_decode from "jwt-decode";
+import { combineReducers } from 'redux';
+import { LOGIN, REGISTER, LOGOUT, PROMISE, PENDING } from './type';
+import jwt_decode from 'jwt-decode';
 
 function promiseReducer(state = {}, action) {
     if ([LOGOUT, LOGIN].includes(action.type)) return {};
     if (action.type === PROMISE) {
-        const { name = "default", status, payload, error } = action;
+        const { name = 'default', status, payload, error } = action;
         if (status) {
             return {
                 ...state,
@@ -26,12 +26,12 @@ function promiseReducer(state = {}, action) {
 
 function authReducer(state, action) {
     if (state === undefined) {
-        if (localStorage.getItem("token") !== null) {
+        if (localStorage.getItem('token') !== null) {
             return authReducer(
                 {},
                 {
                     type: LOGIN,
-                    payload: { login: localStorage.getItem("token") },
+                    payload: localStorage.getItem('token'),
                 }
             );
         }
@@ -39,13 +39,14 @@ function authReducer(state, action) {
         return {};
     }
     if (action.type === LOGIN) {
-        if (action.payload.login !== null) {
-            localStorage.setItem("token", action.payload.login);
+        console.log(action);
+        if (action.payload !== null && action.payload !== undefined) {
+            localStorage.setItem('token', action.payload);
             return {
                 ...state,
 
-                token: action.payload.login,
-                payload: jwt_decode(action.payload.login),
+                token: action.payload,
+                payload: jwt_decode(action.payload),
             };
         }
     }
@@ -54,7 +55,7 @@ function authReducer(state, action) {
         return state;
     }
     if (action.type === LOGOUT) {
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         return {};
     }
 

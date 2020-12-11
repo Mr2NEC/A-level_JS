@@ -66,9 +66,7 @@ store.dispatch(actionCategoryFind());
 const CCategoryMenu = connect((state) => ({
     categories:
         state.promiseReducer.categories &&
-        state.promiseReducer.categories.payload &&
-        state.promiseReducer.categories.payload.data &&
-        state.promiseReducer.categories.payload.data.CategoryFind,
+        state.promiseReducer.categories.payload,
 }))(CategoryMenu);
 
 const CPageCategory = connect(null, { getData: actionCategoryFindOne })(

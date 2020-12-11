@@ -45,25 +45,37 @@ const actionPromise = function (name, p) {
     };
 };
 
-const gql = (
+const getGQL = (
     url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
-    query,
-    variables
-) =>
+    getHeaders = () =>
+        localStorage.token
+            ? { Authorization: `Bearer ${localStorage.token}` }
+            : {}
+) => (query = '', variables = {}) =>
     fetch(url, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            ...getHeaders(),
         },
         body: JSON.stringify({ query, variables }),
-    }).then((res) => res.json());
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.errors) {
+                throw new Error(JSON.stringify(data.errors, null, 4));
+            }
+            const firstKey = Object.keys(data.data)[0];
+            return firstKey ? data.data[firstKey] : data.data;
+        });
+
+const gql = getGQL();
 
 export const actionCategoryFind = () => {
     return actionPromise(
         'categories',
         gql(
-            undefined,
             `query {
   CategoryFind(query:"[{\\"parent\\":null}]"){
     _id,name
@@ -76,7 +88,6 @@ export const actionCategoryFindOne = (_id) => {
     return actionPromise(
         'CategoryFindOne',
         gql(
-            undefined,
             `query CategoryOne($query:String){
   CategoryFindOne(query:$query){
     _id,name,goods{
@@ -95,7 +106,6 @@ export const actionGoodFindOne = (_id) => {
     return actionPromise(
         'GoodFindOne',
         gql(
-            undefined,
             `query good($good:String){
   GoodFindOne(query:$good){
     _id, name, createdAt, description, price
@@ -114,7 +124,6 @@ export function actionLogin(login, password) {
             actionPromise(
                 'log',
                 gql(
-                    undefined,
                     `query log($login:String, $password:String){
   login(login :$login, password:$password)
 }`,
@@ -131,8 +140,7 @@ export function actionLogin(login, password) {
 }
 
 function actionAuthLogin(data) {
-    console.log(data);
-    return { type: LOGIN, payload: data.data };
+    return { type: LOGIN, payload: data };
 }
 
 export function actionRegister(login, password) {
@@ -141,7 +149,6 @@ export function actionRegister(login, password) {
             actionPromise(
                 'reg',
                 gql(
-                    undefined,
                     `mutation reg($login:String, $password:String){
   UserUpsert (user:{login:$login, password:$password}){
     _id,login  

@@ -30,9 +30,7 @@ const CGoodsList = connect((state) => ({
     goods:
         state.promiseReducer.CategoryFindOne &&
         state.promiseReducer.CategoryFindOne.payload &&
-        state.promiseReducer.CategoryFindOne.payload.data &&
-        state.promiseReducer.CategoryFindOne.payload.data.CategoryFindOne &&
-        state.promiseReducer.CategoryFindOne.payload.data.CategoryFindOne.goods,
+        state.promiseReducer.CategoryFindOne.payload.goods,
 }))(GoodsList);
 
 export default CGoodsList;
