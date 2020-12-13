@@ -6,14 +6,14 @@ import {
     RESOLVED,
     REJECTED,
     PENDING,
-} from './type';
+} from "./type";
 // import { GraphQLClient } from 'graphql-request';
 
 // const gql = new GraphQLClient('/graphql');
 
-export const actionSearch = (text) => ({ type: 'SEARCH', text });
+export const actionSearch = (text) => ({ type: "SEARCH", text });
 export const actionSearchResult = (payload) => ({
-    type: 'SEARCH_RESULT',
+    type: "SEARCH_RESULT",
     payload,
 });
 
@@ -46,17 +46,17 @@ const actionPromise = function (name, p) {
 };
 
 const getGQL = (
-    url = 'http://shop-roles.asmer.fs.a-level.com.ua/graphql',
+    url = "http://shop-roles.asmer.fs.a-level.com.ua/graphql",
     getHeaders = () =>
         localStorage.token
             ? { Authorization: `Bearer ${localStorage.token}` }
             : {}
-) => (query = '', variables = {}) =>
+) => (query = "", variables = {}) =>
     fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
             ...getHeaders(),
         },
         body: JSON.stringify({ query, variables }),
@@ -74,7 +74,7 @@ const gql = getGQL();
 
 export const actionCategoryFind = () => {
     return actionPromise(
-        'categories',
+        "categories",
         gql(
             `query {
   CategoryFind(query:"[{\\"parent\\":null}]"){
@@ -86,7 +86,7 @@ export const actionCategoryFind = () => {
 };
 export const actionCategoryFindOne = (_id) => {
     return actionPromise(
-        'CategoryFindOne',
+        "CategoryFindOne",
         gql(
             `query CategoryOne($query:String){
   CategoryFindOne(query:$query){
@@ -104,7 +104,7 @@ export const actionCategoryFindOne = (_id) => {
 
 export const actionGoodFindOne = (_id) => {
     return actionPromise(
-        'GoodFindOne',
+        "GoodFindOne",
         gql(
             `query good($good:String){
   GoodFindOne(query:$good){
@@ -118,11 +118,28 @@ export const actionGoodFindOne = (_id) => {
     );
 };
 
+export const actionOrders = () => {
+    return actionPromise(
+        "orders",
+        gql(
+            `query OrderFind($allQery:String){
+            OrderFind(query:$allQery){_id total orderGoods{
+                total count good{name, price, _id}
+                }
+                }
+            }`,
+            {
+                allQery: JSON.stringify([{}]),
+            }
+        )
+    );
+};
+
 export function actionLogin(login, password) {
     return async function (dispatch) {
         let result = await dispatch(
             actionPromise(
-                'log',
+                "log",
                 gql(
                     `query log($login:String, $password:String){
   login(login :$login, password:$password)
@@ -147,7 +164,7 @@ export function actionRegister(login, password) {
     return async function (dispatch) {
         let result = await dispatch(
             actionPromise(
-                'reg',
+                "reg",
                 gql(
                     `mutation reg($login:String, $password:String){
   UserUpsert (user:{login:$login, password:$password}){

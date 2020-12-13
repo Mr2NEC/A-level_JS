@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider, connect } from 'react-redux';
-import logger from 'redux-logger';
-import { rootReducer } from './redux/rootReducer';
-import { Router, Route } from 'react-router-dom';
+import React, { useState } from "react";
+import thunk from "redux-thunk";
+import { createStore, applyMiddleware } from "redux";
+import { Provider, connect } from "react-redux";
+import logger from "redux-logger";
+import { rootReducer } from "./redux/rootReducer";
+import { Router, Route } from "react-router-dom";
 
 import {
     actionLogin,
@@ -13,18 +13,20 @@ import {
     actionCategoryFind,
     actionCategoryFindOne,
     actionGoodFindOne,
-} from './redux/actions';
+    actionOrders,
+} from "./redux/actions";
 
-import CategoryMenu from './components/CategoryMenu';
-import LoginForm from './components/LoginForm';
-import logoutButton from './components/logoutButton';
+import CategoryMenu from "./components/CategoryMenu";
+import LoginForm from "./components/LoginForm";
+import logoutButton from "./components/logoutButton";
 
-import PageMain from './page/PageMain';
-import PageCategory from './page/PageCategory';
-import PageGood from './page/PageGood';
+import PageMain from "./page/PageMain";
+import PageCategory from "./page/PageCategory";
+import PageGood from "./page/PageGood";
+import PageDashboard from "./page/PageDashboard";
 
-import createHistory from 'history/createBrowserHistory';
-import './App.css';
+import createHistory from "history/createBrowserHistory";
+import "./App.css";
 
 const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 const history = createHistory();
@@ -62,6 +64,7 @@ const CLogoutButton = connect(
 )(logoutButton);
 
 store.dispatch(actionCategoryFind());
+store.dispatch(actionOrders());
 
 const CCategoryMenu = connect((state) => ({
     categories:
@@ -93,6 +96,7 @@ function App() {
                             exact
                         />
                         <Route path="/good/:_id" component={СPageGood} exact />
+                        <PageDashboard />
                     </main>
                 </Router>
             </>
