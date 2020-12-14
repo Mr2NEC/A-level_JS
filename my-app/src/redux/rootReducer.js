@@ -39,7 +39,6 @@ function authReducer(state, action) {
         return {};
     }
     if (action.type === LOGIN) {
-        console.log(action);
         if (action.payload !== null && action.payload !== undefined) {
             localStorage.setItem('token', action.payload);
             return {
@@ -62,7 +61,13 @@ function authReducer(state, action) {
     return state;
 }
 
+// function cartReducer(state = {}, { type, _id, count }) {
+//     let types = {};
+//     return state;
+// }
+
 export const rootReducer = combineReducers({
     promiseReducer: promiseReducer,
     authReducer: authReducer,
+    // cartReducer: cartReducer,
 });

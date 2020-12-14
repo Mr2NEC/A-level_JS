@@ -1,5 +1,5 @@
-import React from "react";
-import CDashboardList from "../components/DashboardList";
+import React from 'react';
+import CDashboardList from '../components/DashboardList';
 
 export default function PageDashboard() {
     return (

@@ -1,28 +1,19 @@
-import React from "react";
-import DashboardCard from "./DashboardCard";
-import { connect } from "react-redux";
+import React from 'react';
+import DashboardCard from './DashboardCard';
+import { connect } from 'react-redux';
 
 const defaultDashboardGoods = [
     {
-        _id: "5fd381efb00392130cb0c9f0",
-        total: 1500,
+        _id: 'нет ID',
+        total: 0,
         orderGoods: [
             {
-                total: 500,
-                count: 1,
+                total: 0,
+                count: 0,
                 good: {
-                    name: 'Xiaomi Mi TV UHD 4S 43" International Edition',
-                    price: 500,
-                    _id: "5dc4a8665df9d670df48cc78",
-                },
-            },
-            {
-                total: 1000,
-                count: 2,
-                good: {
-                    name: 'Xiaomi Mi TV UHD 4S 43" International Edition',
-                    price: 500,
-                    _id: "5dc4a8665df9d670df48cc78",
+                    name: 'нет товара',
+                    price: 0,
+                    _id: '1',
                 },
             },
         ],
@@ -30,8 +21,6 @@ const defaultDashboardGoods = [
 ];
 
 function DashboardList({ orders = defaultDashboardGoods }) {
-    console.log(orders);
-    orders.map((order) => console.log(order));
     return (
         <>
             <div>

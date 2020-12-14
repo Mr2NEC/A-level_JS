@@ -1,5 +1,6 @@
 import React from 'react';
 import CategoryMenuItem from './CategoryMenuItem';
+import { Link } from 'react-router-dom';
 
 export default function CategoryMenu({
     categories = [
@@ -20,6 +21,9 @@ export default function CategoryMenu({
     return (
         <aside>
             <ul>
+                <li>
+                    <Link to={`/`}>Главная</Link>
+                </li>
                 {categories &&
                     categories.map((category) => (
                         <CategoryMenuItem

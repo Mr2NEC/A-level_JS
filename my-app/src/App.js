@@ -1,10 +1,6 @@
-import React, { useState } from "react";
-import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
-import { Provider, connect } from "react-redux";
-import logger from "redux-logger";
-import { rootReducer } from "./redux/rootReducer";
-import { Router, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { Provider, connect } from 'react-redux';
+import { Router, Route } from 'react-router-dom';
 
 import {
     actionLogin,
@@ -14,21 +10,22 @@ import {
     actionCategoryFindOne,
     actionGoodFindOne,
     actionOrders,
-} from "./redux/actions";
+} from './redux/actions';
 
-import CategoryMenu from "./components/CategoryMenu";
-import LoginForm from "./components/LoginForm";
-import logoutButton from "./components/logoutButton";
+import CategoryMenu from './components/CategoryMenu';
+import LoginForm from './components/LoginForm';
+import logoutButton from './components/logoutButton';
+import DashboardButton from './components/DashboardButton';
+import store from './store';
 
-import PageMain from "./page/PageMain";
-import PageCategory from "./page/PageCategory";
-import PageGood from "./page/PageGood";
-import PageDashboard from "./page/PageDashboard";
+import PageMain from './page/PageMain';
+import PageCategory from './page/PageCategory';
+import PageGood from './page/PageGood';
+import PageDashboard from './page/PageDashboard';
 
-import createHistory from "history/createBrowserHistory";
-import "./App.css";
+import createHistory from 'history/createBrowserHistory';
+import './App.css';
 
-const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 const history = createHistory();
 
 const CLogin = connect(null, { onLogin: actionLogin })(LoginForm);
@@ -78,6 +75,19 @@ const CPageCategory = connect(null, { getData: actionCategoryFindOne })(
 
 const СPageGood = connect(null, { getData: actionGoodFindOne })(PageGood);
 
+const CDashboardButton = connect(
+    (state) => ({
+        children:
+            state.promiseReducer.orders &&
+            state.promiseReducer.orders.payload &&
+            (state.promiseReducer.orders.payload.length === 0
+                ? 0
+                : state.promiseReducer.orders.payload[0] &&
+                  state.promiseReducer.orders.payload[0].orderGoods.length),
+    }),
+    null
+)(DashboardButton);
+
 function App() {
     return (
         <Provider store={store}>
@@ -96,7 +106,12 @@ function App() {
                             exact
                         />
                         <Route path="/good/:_id" component={СPageGood} exact />
-                        <PageDashboard />
+                        <CDashboardButton />
+                        <Route
+                            path="/Dashboar/"
+                            component={PageDashboard}
+                            exact
+                        />
                     </main>
                 </Router>
             </>
