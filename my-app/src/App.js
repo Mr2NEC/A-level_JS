@@ -14,7 +14,7 @@ import {
 
 import CategoryMenu from './components/CategoryMenu';
 import LoginForm from './components/LoginForm';
-import logoutButton from './components/logoutButton';
+import LogoutButton from './components/LogoutButton';
 import DashboardButton from './components/DashboardButton';
 import store from './store';
 
@@ -58,7 +58,7 @@ const CLogoutButton = connect(
             state.authReducer.payload && state.authReducer.payload.sub.login,
     }),
     { onClick: actionLogout }
-)(logoutButton);
+)(LogoutButton);
 
 store.dispatch(actionCategoryFind());
 store.dispatch(actionOrders());

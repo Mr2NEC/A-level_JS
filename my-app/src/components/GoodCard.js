@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import CardButton from './CardButton';
+import { actionCART_ADD, actionCART_DELETE } from '../redux/actions';
 
 const defaultGood = {
     _id: '5dc4a8665df9d670df48cc78',
@@ -10,16 +12,30 @@ const defaultGood = {
     price: 500,
 };
 
+const CCardButtonAdd = connect(null, { onClick: actionCART_ADD })(CardButton);
+const CCardButtonDel = connect(null, { onClick: actionCART_DELETE })(
+    CardButton
+);
+
 function GoodCard({ good = defaultGood }) {
     return (
-        <ul>
-            <li>{good.name}</li>
-            <li>{good.description}</li>
-            <li>{good.price}</li>
-        </ul>
+        <>
+            <ul>
+                <li>{good.name}</li>
+                <li>{good.description}</li>
+                <li>{good.price}</li>
+            </ul>
+            <CCardButtonAdd
+                children="Добавить в корзину"
+                param={{ _id: good._id, count: 1 }}
+            />
+            <CCardButtonDel
+                children="Удалить из корзины"
+                param={{ _id: good._id }}
+            />
+        </>
     );
 }
-
 const CGoodCard = connect((state) => ({
     good:
         state.promiseReducer.GoodFindOne &&

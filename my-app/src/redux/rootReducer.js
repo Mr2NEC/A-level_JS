@@ -1,5 +1,15 @@
 import { combineReducers } from 'redux';
-import { LOGIN, REGISTER, LOGOUT, PROMISE, PENDING } from './type';
+import {
+    LOGIN,
+    REGISTER,
+    LOGOUT,
+    PROMISE,
+    PENDING,
+    CART_ADD,
+    CART_DELETE,
+    CART_SET,
+    CART_CLEAR,
+} from './type';
 import jwt_decode from 'jwt-decode';
 
 function promiseReducer(state = {}, action) {
@@ -60,14 +70,45 @@ function authReducer(state, action) {
 
     return state;
 }
+function cartReducer(state = {}, action) {
+    console.log(action.type);
+    if (action.type === CART_ADD && action._id !== undefined) {
+        if (state[action._id] !== undefined) {
+            state[action._id]++;
+            return state;
+        }
+        return {
+            ...state,
+            [action._id]: 1,
+        };
+    }
+    if (action.type === CART_DELETE) {
+        delete state[action._id];
+        return state;
+    }
+    if (action.type === CART_SET) {
+        if (state[action._id] !== undefined) {
+            for (let keyId in state) {
+                if (keyId === action._id) {
+                    state[keyId] = state[keyId] + action.count;
+                }
+            }
+            return state;
+        }
+        return {
+            ...state,
+            [action._id]: action.count,
+        };
+    }
+    if (action.type === CART_CLEAR) {
+        return {};
+    }
 
-// function cartReducer(state = {}, { type, _id, count }) {
-//     let types = {};
-//     return state;
-// }
+    return state;
+}
 
 export const rootReducer = combineReducers({
     promiseReducer: promiseReducer,
     authReducer: authReducer,
-    // cartReducer: cartReducer,
+    cartReducer: cartReducer,
 });
