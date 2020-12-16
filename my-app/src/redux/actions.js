@@ -105,7 +105,16 @@ export const actionCategoryFindOne = (_id) => {
         )
     );
 };
-
+// new variant
+export const actionGoodFindOne = (_id) => {
+  const name = 'GoodFindOne'
+  const query = gql(`query good($good:String){
+      GoodFindOne(query:$good){_id, name, createdAt, description, price}
+  }`);
+  const props = {good: JSON.stringify([{ _id }])}
+  return actionPromise(name, query, props)
+};
+// previous variant
 export const actionGoodFindOne = (_id) => {
     return actionPromise(
         'GoodFindOne',
