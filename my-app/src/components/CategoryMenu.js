@@ -1,8 +1,9 @@
 import React from 'react';
 import CategoryMenuItem from './CategoryMenuItem';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default function CategoryMenu({
+function CategoryMenu({
     categories = [
         {
             _id: '5dc45acf5df9d670df48cc48',
@@ -35,3 +36,11 @@ export default function CategoryMenu({
         </aside>
     );
 }
+
+const CCategoryMenu = connect((state) => ({
+    categories:
+        state.promiseReducer.categories &&
+        state.promiseReducer.categories.payload,
+}))(CategoryMenu);
+
+export default CCategoryMenu;

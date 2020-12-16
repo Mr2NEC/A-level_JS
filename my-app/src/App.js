@@ -1,92 +1,28 @@
-import React, { useState } from 'react';
-import { Provider, connect } from 'react-redux';
+import React from 'react';
+import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router-dom';
+import createHistory from 'history/createBrowserHistory';
 
-import {
-    actionLogin,
-    actionRegister,
-    actionLogout,
-    actionCategoryFind,
-    actionCategoryFindOne,
-    actionGoodFindOne,
-    actionOrders,
-} from './redux/actions';
+import './App.css';
 
-import CategoryMenu from './components/CategoryMenu';
-import LoginForm from './components/LoginForm';
-import LogoutButton from './components/LogoutButton';
-import DashboardButton from './components/DashboardButton';
-import store from './store';
+import actionCategoryFind from './redux/action/actionCategoryFind';
+import actionOrders from './redux/action/actionOrders';
+
+import store from './redux/store';
+
+import CCategoryMenu from './components/CategoryMenu';
+import CDashboardButton from './components/DashboardButton';
+import LoginOrRegister from './components/LoginOrRegister';
 
 import PageMain from './page/PageMain';
-import PageCategory from './page/PageCategory';
-import PageGood from './page/PageGood';
+import CPageCategory from './page/PageCategory';
+import СPageGood from './page/PageGood';
 import PageDashboard from './page/PageDashboard';
-
-import createHistory from 'history/createBrowserHistory';
-import './App.css';
 
 const history = createHistory();
 
-const CLogin = connect(null, { onLogin: actionLogin })(LoginForm);
-const CRegister = connect(null, { onLogin: actionRegister })(LoginForm);
-
-const LoginOrRegister = () => {
-    const [logReg, setLogReg] = useState(<CLogin />);
-    return (
-        <div>
-            <CLogoutButton />
-            <button
-                className="LoginFormButton"
-                onClick={() => setLogReg(<CLogin />)}
-            >
-                Login
-            </button>
-            <button
-                className="LoginFormButton"
-                onClick={() => setLogReg(<CRegister />)}
-            >
-                Register
-            </button>
-            {logReg}
-        </div>
-    );
-};
-const CLogoutButton = connect(
-    (state) => ({
-        children:
-            state.authReducer.payload && state.authReducer.payload.sub.login,
-    }),
-    { onClick: actionLogout }
-)(LogoutButton);
-
 store.dispatch(actionCategoryFind());
 store.dispatch(actionOrders());
-
-const CCategoryMenu = connect((state) => ({
-    categories:
-        state.promiseReducer.categories &&
-        state.promiseReducer.categories.payload,
-}))(CategoryMenu);
-
-const CPageCategory = connect(null, { getData: actionCategoryFindOne })(
-    PageCategory
-);
-
-const СPageGood = connect(null, { getData: actionGoodFindOne })(PageGood);
-
-const CDashboardButton = connect(
-    (state) => ({
-        children:
-            state.promiseReducer.orders &&
-            state.promiseReducer.orders.payload &&
-            (state.promiseReducer.orders.payload.length === 0
-                ? 0
-                : state.promiseReducer.orders.payload[0] &&
-                  state.promiseReducer.orders.payload[0].orderGoods.length),
-    }),
-    null
-)(DashboardButton);
 
 function App() {
     return (

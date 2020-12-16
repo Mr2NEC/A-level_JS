@@ -34,7 +34,7 @@ function DashboardList({ orders = defaultDashboardGoods }) {
 }
 
 const CDashboardList = connect((state) => ({
-    orders: state.promiseReducer.orders && state.promiseReducer.orders.payload,
+    orders: state.promiseReducer.Orders && state.promiseReducer.Orders.payload,
 }))(DashboardList);
 
 export default CDashboardList;

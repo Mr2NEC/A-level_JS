@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import actionLogin from '../redux/action/actionLogin';
+import actionRegister from '../redux/action/actionRegister';
 
-export default function  LoginForm ({ onLogin, btnText = 'Submit' }) {
+function LoginForm({ onLogin, textBtn = 'Submit' }) {
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
     return (
@@ -11,8 +14,11 @@ export default function  LoginForm ({ onLogin, btnText = 'Submit' }) {
                 className="LoginFormButton"
                 onClick={() => onLogin(login, password)}
             >
-                {btnText}
+                {textBtn}
             </button>
         </div>
     );
-};
+}
+
+export const CLogin = connect(null, { onLogin: actionLogin })(LoginForm);
+export const CRegister = connect(null, { onLogin: actionRegister })(LoginForm);

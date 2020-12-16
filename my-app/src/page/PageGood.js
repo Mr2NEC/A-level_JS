@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import СGoodCard from '../components/GoodCard';
+import actionGoodFindOne from '../redux/action/actionGoodFindOne';
 
-export default function PageGood({
+function PageGood({
     match: {
         params: { _id },
     },
@@ -15,3 +17,7 @@ export default function PageGood({
         </>
     );
 }
+
+const СPageGood = connect(null, { getData: actionGoodFindOne })(PageGood);
+
+export default СPageGood;

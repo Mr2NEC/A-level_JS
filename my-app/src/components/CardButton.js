@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function CardButton({ onClick, children, param }) {
-    console.log(param);
     return (
         <button
             className="LoginFormButton"
