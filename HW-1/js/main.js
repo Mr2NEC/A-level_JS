@@ -24,6 +24,7 @@ let myMessageId = 0;
 const delay = (ms) => new Promise((ok) => setTimeout(() => ok(ms), ms));
 
 async function jsonPost(url, data) {
+    console.log(JSON.stringify(data));
     let response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),

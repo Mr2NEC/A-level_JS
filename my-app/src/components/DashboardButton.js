@@ -12,13 +12,7 @@ function DashboardButton({ children }) {
 
 const CDashboardButton = connect(
     (state) => ({
-        children:
-            state.promiseReducer.Orders &&
-            state.promiseReducer.Orders.payload &&
-            (state.promiseReducer.Orders.payload.length === 0
-                ? 0
-                : state.promiseReducer.Orders.payload[0] &&
-                  state.promiseReducer.Orders.payload[0].orderGoods.length),
+        children: state.cartReducer.length,
     }),
     null
 )(DashboardButton);
