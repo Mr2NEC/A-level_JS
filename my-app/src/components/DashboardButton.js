@@ -12,7 +12,7 @@ function DashboardButton({ children }) {
 
 const CDashboardButton = connect(
     (state) => ({
-        children: state.cartReducer.length,
+        children: Object.keys(state.cartReducer).length,
     }),
     null
 )(DashboardButton);
