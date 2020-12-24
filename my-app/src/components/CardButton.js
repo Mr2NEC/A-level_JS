@@ -4,7 +4,7 @@ export default function CardButton({ onClick, children, param }) {
     return (
         <button
             className="LoginFormButton"
-            onClick={() => onClick({ ...param })}
+            onClick={() => onClick(param._id, param.count)}
         >
             {children}
         </button>

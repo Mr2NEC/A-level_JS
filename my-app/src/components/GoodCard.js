@@ -17,17 +17,6 @@ const CCardButtonAdd = connect(null, { onClick: actionCartAdd })(CardButton);
 const CCardButtonDel = connect(null, { onClick: actionCartDelete })(CardButton);
 
 function GoodCard({ good = defaultGood }) {
-    let buttonObj = {
-        flag: JSON.parse(localStorage.cart).includes({ ...good }),
-        buttonAdd: (
-            <CCardButtonAdd children="Добавить в корзину" param={{ ...good }} />
-        ),
-        buttonDel: (
-            <CCardButtonDel children="Добавить в корзину" param={{ ...good }} />
-        ),
-    };
-
-    const [btn, setBtn] = useState();
     return (
         <>
             <ul>
@@ -35,6 +24,14 @@ function GoodCard({ good = defaultGood }) {
                 <li>{good.description}</li>
                 <li>{good.price}</li>
             </ul>
+            <CCardButtonAdd
+                children="Добавить в корзину"
+                param={{ _id: good._id, count: 1 }}
+            />
+            <CCardButtonDel
+                children="Удалить из корзины"
+                param={{ _id: good._id }}
+            />
         </>
     );
 }

@@ -5,7 +5,7 @@ export default function cartReducer(state = {}, { type, _id, count }) {
         localStorage.setItem('cart', JSON.stringify([]));
     }
 
-    if (JSON.parse(localStorage.cart).length !== 0) {
+    if (state === {} && JSON.parse(localStorage.cart).length !== 0) {
         JSON.parse(localStorage.cart).forEach((element) => {
             let newElem = { [element._id]: element.count };
             state = { ...state, ...newElem };
@@ -21,7 +21,7 @@ export default function cartReducer(state = {}, { type, _id, count }) {
             }
             return {
                 ...state,
-                [_id]: 1,
+                [_id]: count,
             };
 
         case CART_DELETE:
